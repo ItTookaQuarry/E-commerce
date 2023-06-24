@@ -17,7 +17,6 @@ export default function Layout() {
 
   const location = useLocation();
 
-
   React.useEffect(() => {
     const asyncFn = async () => {
       const res = await fetch("https://fakestoreapi.com/products/");
@@ -59,17 +58,23 @@ export default function Layout() {
 
   const logged = localStorage.getItem("Log");
 
-const style= logged=="true" ? {display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr 1fr 1fr" }:
-{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr 1fr " }
+  const style =
+    logged == "true"
+      ? { display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr" }
+      : { display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr " };
 
-console.log(style)
-
+  console.log(style);
 
   const [shown, isshown] = React.useState("false");
   return (
     <>
       <nav className="NavBarGrid" style={style}>
-        <NavLink className="basket" to="basket">
+        <NavLink className="basket" to="basket"
+                 style={({ isActive }) => {
+                  let style = "";
+                  isActive ? (style = style1) : (style = style2);
+                  return style;
+                }}>
           <img
             src="basket.png"
             onMouseEnter={() => {
@@ -87,7 +92,7 @@ console.log(style)
           )}
         </NavLink>
         {logged == "true" && (
-          <NavLink
+          <NavLink       
             onClick={() => {
               localStorage.setItem("Log", "false");
               return " 123";
@@ -98,11 +103,20 @@ console.log(style)
           </NavLink>
         )}
         {logged !== "true" && (
-          <NavLink to="login" className="nav" replace>
+          <NavLink to="login" className="nav" replace
+          style={({ isActive }) => {
+            let style = "";
+            isActive ? (style = style1) : (style = style2);
+            return style;
+          }}>
             Log In
           </NavLink>
         )}{" "}
-        <NavLink to="register" className="nav" replace>
+        <NavLink to="register" className="nav" replace          style={({ isActive }) => {
+            let style = "";
+            isActive ? (style = style1) : (style = style2);
+            return style;
+          }}>
           Register
         </NavLink>
         <NavLink
@@ -116,15 +130,30 @@ console.log(style)
         >
           Products
         </NavLink>
-        <NavLink to={"map"} className="nav">
+        <NavLink
+          to={"map"}
+          className="nav"
+          style={({ isActive }) => {
+            let style = "";
+            isActive ? (style = style1) : (style = style2);
+            return style;
+          }}
+        >
           Map of the page
         </NavLink>
-
-        {logged == "true" && <NavLink to={"acc"} className="nav" style={{display:"grid"}}>
-        <img src="user.png" style={{height:"30px",margin:"auto"}}/>
-        <div>Your Account</div>
-        </NavLink>}
-
+        {logged == "true" && (
+          <NavLink to={"acc"} className="nav" style={{ display: "grid" 
+        
+        }}
+          >
+            <img src="user.png" style={{ height: "30px", margin: "auto" }} />
+            <div
+                 
+            
+            
+            >Your Account</div>
+          </NavLink>
+        )}
       </nav>
       <Outlet />
     </>
