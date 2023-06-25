@@ -34,41 +34,32 @@ export default function SingleProduct() {
   const SRC = countthestars(product.rating.rate);
   const location = useLocation();
 
-
-
-let filtredproduct=" "
-let category=" "
-
-
+  let filtredproduct = " ";
+  let category = " ";
 
   if (location?.state?.product) {
-  filtredproduct = location.state.product;
+    filtredproduct = location.state.product;
     localStorage.setItem("filtred", filtredproduct);
   }
 
-  if (localStorage.getItem("filtred")!==undefined) {
-     filtredproduct = localStorage.getItem("filtred");
+  if (localStorage.getItem("filtred") !== undefined) {
+    filtredproduct = localStorage.getItem("filtred");
   }
 
   if (location?.state?.category) {
-   category = location.state.category;
+    category = location.state.category;
     localStorage.setItem("category", category);
   }
 
-  if (localStorage.getItem("category")!=undefined) {
-     category = localStorage.getItem("category");
+  if (localStorage.getItem("category") != undefined) {
+    category = localStorage.getItem("category");
   }
 
-
-
-
-
- 
   return (
     <div className="oneproductwrapper">
       <Link
         className="backlink"
-     to={`/?category=${category}&filtredproduct=${filtredproduct}`}
+        to={`/?category=${category}&filtredproduct=${filtredproduct}`}
       >
         <img src="backicon.png" style={{ height: "50px", width: "50px" }} />
       </Link>
@@ -89,26 +80,16 @@ let category=" "
           min="1"
           max="10"
         />
-        <button type="submit"> Add to basket</button>
+        <button name="" type="submit">
+          {" "}
+          Add to basket
+        </button>
       </Form>
       {action && (
         <p style={{ gridColumn: "2/3", margin: "auto" }}>
           {"product added to your basket"}
         </p>
       )}
-
-
-
-      {/* <div className="Opinions">
-     <div>Opinions about the product:</div>
-{localStorage.getItem("Log")==="true"&&<div>Add Opinion</div>} 
-
-      </div> */}
     </div>
-
-
-
-
-
   );
 }

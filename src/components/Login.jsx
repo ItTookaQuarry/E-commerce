@@ -10,49 +10,44 @@ export async function action({ request }) {
 
   if (email === 0 || password === 0) {
     return null;
-  } 
-  try {
-    const registration =await signInWithEmailAndPassword(auth,email,password)
-   return changedirection(email)
-  } catch (error) {
-    const message=error.message.replace("Firebase: Error (auth/"," ").replace("-"," ").replace(")","")
-
-
-
-    return {error:message}
   }
-  
+  try {
+    const registration = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    return changedirection(email);
+  } catch (error) {
+    const message = error.message
+      .replace("Firebase: Error (auth/", " ")
+      .replace("-", " ")
+      .replace(")", "");
 
-
-
-
-
-
-
-
+    return { error: message };
+  }
 }
 
 export default function Login() {
-const data=useActionData()
-
-
-
-
-
+  const data = useActionData();
 
   return (
-
-      <div className="loginform">
-      <Form  method="post" className="loginchild" >
+    <div className="loginform">
+      <Form method="post" className="loginchild">
         <p>Type your email</p>
         <input name="email" type="text" placeholder="email" className="imput" />
         <br />
         <p>Type your password</p>
-        <input name="password" type="password" placeholder="password" className="imput"/>
+        <input
+          name="password"
+          type="password"
+          placeholder="password"
+          className="imput"
+        />
         <button type="submit"> Submit</button>
       </Form>
 
-      {data&&<p className="p">{data.error}</p>}</div>
-      
+      {data && <p className="p">{data.error}</p>}
+    </div>
   );
 }

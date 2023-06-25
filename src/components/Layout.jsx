@@ -43,18 +43,16 @@ export default function Layout() {
   if (totalinstorage !== 0) {
     map = tab.map((each) => {
       return (
-        <div className="baskethovergrid">
-          <img src={each.image} style={{ height: "80px", width: "80px" }} />
+        <div className="baskethovergrid" style={{ border: "2px solid black" }}>
+          <img src={each.image} style={{ height: "5vw", width: "5vw" }} />
           <div>{each.InStorage}</div>
         </div>
       );
     });
   }
 
-  const navigation = useNavigate();
-
   const style1 = { color: "red" };
-  const style2 = { color: "white" };
+  const style2 = { color: "black" };
 
   const logged = localStorage.getItem("Log");
 
@@ -69,12 +67,15 @@ export default function Layout() {
   return (
     <>
       <nav className="NavBarGrid" style={style}>
-        <NavLink className="basket" to="basket"
-                 style={({ isActive }) => {
-                  let style = "";
-                  isActive ? (style = style1) : (style = style2);
-                  return style;
-                }}>
+        <NavLink
+          className="basket"
+          to="basket"
+          style={({ isActive }) => {
+            let style = "";
+            isActive ? (style = style1) : (style = style2);
+            return style;
+          }}
+        >
           <img
             src="basket.png"
             onMouseEnter={() => {
@@ -86,13 +87,21 @@ export default function Layout() {
           />
           {shown === true && location.pathname !== "/basket" && (
             <div className="basketonhover">
-              <p>You have {`${totalinstorage} products in Cart`}</p>
+              <p
+                style={{
+                  fontSize: "1vw",
+                  gridColumn: `1/${map.length + 1}`,
+                  margin: "auto",
+                }}
+              >
+                You have {`${totalinstorage} products in Cart`}
+              </p>
               {map}
             </div>
           )}
         </NavLink>
         {logged == "true" && (
-          <NavLink       
+          <NavLink
             onClick={() => {
               localStorage.setItem("Log", "false");
               return " 123";
@@ -103,20 +112,29 @@ export default function Layout() {
           </NavLink>
         )}
         {logged !== "true" && (
-          <NavLink to="login" className="nav" replace
+          <NavLink
+            to="login"
+            className="nav"
+            replace
+            style={({ isActive }) => {
+              let style = "";
+              isActive ? (style = style1) : (style = style2);
+              return style;
+            }}
+          >
+            Log In
+          </NavLink>
+        )}{" "}
+        <NavLink
+          to="register"
+          className="nav"
+          replace
           style={({ isActive }) => {
             let style = "";
             isActive ? (style = style1) : (style = style2);
             return style;
-          }}>
-            Log In
-          </NavLink>
-        )}{" "}
-        <NavLink to="register" className="nav" replace          style={({ isActive }) => {
-            let style = "";
-            isActive ? (style = style1) : (style = style2);
-            return style;
-          }}>
+          }}
+        >
           Register
         </NavLink>
         <NavLink
@@ -142,16 +160,16 @@ export default function Layout() {
           Map of the page
         </NavLink>
         {logged == "true" && (
-          <NavLink to={"acc"} className="nav" style={{ display: "grid" 
-        
-        }}
+          <NavLink
+            to={"acc"}
+            className="nav"
+            style={({ isActive }) => {
+              let style = "";
+              isActive ? (style = style1) : (style = style2);
+              return style;
+            }}
           >
-            <img src="user.png" style={{ height: "30px", margin: "auto" }} />
-            <div
-                 
-            
-            
-            >Your Account</div>
+            <div>Your Account</div>
           </NavLink>
         )}
       </nav>

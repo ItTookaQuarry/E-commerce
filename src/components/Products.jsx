@@ -14,14 +14,27 @@ import {
 export async function action({ request }) {
   const Formdata = await request.formData();
   const filtredproduct = Formdata.get("product");
-
   const pathname = new URL(request.url);
   const search = pathname.searchParams.get("category");
 
-  if (!search) {
+  if (!search && filtredproduct !== null) {
     throw redirect(`/?filtredproduct=${filtredproduct}`);
-  } else
+  }
+
+  if (search && filtredproduct !== null) {
     throw redirect(`/?category=${search}&filtredproduct=${filtredproduct}`);
+  }
+
+  const producttocart = Formdata.get("currentvalue");
+  const numberofproducttocart = Formdata.get(`${producttocart}`);
+  const valuebefore = localStorage.getItem(producttocart);
+  const valueafter = valuebefore
+    ? numberofproducttocart * 1 + valuebefore * 1
+    : numberofproducttocart;
+
+  localStorage.setItem(producttocart, valueafter);
+
+  return [producttocart, numberofproducttocart, valuebefore];
 }
 
 export function loader({ request }) {
@@ -34,7 +47,7 @@ export function loader({ request }) {
 }
 
 export default function Products() {
-  const actiondata = useActionData();
+  console.log(useActionData());
 
   const [params, setparams] = useSearchParams();
 
@@ -86,8 +99,29 @@ export default function Products() {
           <div className="count">{each.rating.count} users voted</div>
           <div className="price">
             <strong>{each.price}$</strong>
+
+            <Form method="post" className="allproductstocartform" style={{display:"grid",gridTemplateColumns:"1fr 1fr"}}>
+              <input
+                style={{
+                  margin: "auto",
+                  textAlign: "center",
+                                }}
+                name={each.id}
+                type="number"
+                min="1"
+                max="10"
+              />
+              <button
+                type="submit"
+                name="currentvalue"
+                value={each.id}
+                style={{  margin: "auto"}}
+              >
+                {" "}
+                +
+              </button>
+            </Form>
           </div>
-          <div></div>{" "}
         </div>
       </div>
     );
