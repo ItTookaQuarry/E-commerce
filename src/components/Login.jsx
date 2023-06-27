@@ -1,8 +1,16 @@
 import React from "react";
-import { useActionData, Form, redirect } from "react-router-dom";
+import {
+  useActionData,
+  Form,
+  redirect,
+  useSearchParams,
+  useLoaderData,
+} from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase.js";
 import changedirection from "./changedirection.js";
+import { toast } from "react-toastify";
+
 export async function action({ request }) {
   const formData = await request.formData();
   const email = formData.get("email");
@@ -19,6 +27,7 @@ export async function action({ request }) {
     );
     return changedirection(email);
   } catch (error) {
+    localStorage.setItem("error", true);
     const message = error.message
       .replace("Firebase: Error (auth/", " ")
       .replace("-", " ")
@@ -27,9 +36,16 @@ export async function action({ request }) {
     return { error: message };
   }
 }
-
+export async function loader({ request }) {
+  return "123";
+}
 export default function Login() {
   const data = useActionData();
+
+  if (localStorage.getItem("error")) {
+    toast.error(`${data.error}`, { autoClose: 1500, position: "top-left" });
+    localStorage.removeItem("error");
+  }
 
   return (
     <div className="loginform">
@@ -46,8 +62,6 @@ export default function Login() {
         />
         <button type="submit"> Submit</button>
       </Form>
-
-      {data && <p className="p">{data.error}</p>}
     </div>
   );
 }

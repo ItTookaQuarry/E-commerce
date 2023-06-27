@@ -1,8 +1,9 @@
 import React from "react";
 import utility from "../utility";
 import { useLoaderData, Form, useActionData } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 export async function loader() {
-  return utility();
+  return utility()
 }
 
 export async function action({ request }) {
@@ -23,30 +24,35 @@ export async function action({ request }) {
 }
 
 export default function Basket() {
-const items= {...localStorage}
-function ChangeState(id){
-localStorage.removeItem(id)
-setData((prev)=>{
-  return [...prev,..."I'm doing it only to refresh the page"]
-})
-return 
-}
 
 
 
 
-  const action = useActionData();
+
+
+
+
+
+  function ChangeState(id) {
+    localStorage.removeItem(id);
+    setData((prev) => {
+      return [...prev, ..."I'm doing it only to refresh the page"];
+    });
+    return;
+  }
+
 
   const loader = useLoaderData();
+ 
 
 
-  const [data,setData]=React.useState(loader)
+  const [data, setData] = React.useState(loader);
   let price = 0;
 
   const showfiltred = data.filter((each) => {
     return localStorage.getItem(each.id) !== null;
   });
-console.log(showfiltred)
+
   const table = showfiltred.map((each, i) => {
     const number = localStorage.getItem(each.id);
     price = price + number * each.price;
@@ -55,39 +61,43 @@ console.log(showfiltred)
       <>
         <div className="one">
           <h1>{each.title}</h1>
-              <img src={each.image} style={{ height: "70%", width: "70%" }} />
-          <div className="numb">{`${number} in cart price:`+`${Math.floor(number * each.price)}$`}</div>
-          
-          
-            {number*1>1&&<Form className="deletebuttongrid" method="post">
+          <img src={each.image} style={{ height: "70%", width: "70%" }} />
+          <div className="numb">
+            {`${number} in cart price:` + `${Math.floor(number * each.price)}$`}
+          </div>
+
+          {number * 1 > 1 && (
+            <Form className="deletebuttongrid" method="post">
               <input
                 name={each.id}
                 type="number"
                 placeholder="1"
                 min="1"
                 max={number}
-                style={{height:"14px",width:"35px"}}
+                style={{ height: "14px", width: "35px" }}
               />
-              <button type="submit" style={{border:"none", background: "transparent"}}>
+              <button
+                type="submit"
+                style={{ border: "none", background: "transparent" }}
+              >
                 <img
                   src="trash.png"
                   alt="trash"
-                  style={{ height: "20px", width: "20px",}}
+                  style={{ height: "20px", width: "20px" }}
                 />
               </button>
-            </Form> }
-            {number*1===1&&
+            </Form>
+          )}
+          {number * 1 === 1 && (
             <div className="deletebuttongrid">
-                       <img
-            onClick={()=>ChangeState(each.id)}
-    
-              src="trash.png"
-              alt="trash"
-              style={{ height: "20px", width: "20px", gridColumn:"-1/-2",}}
-            />
-             </div>
-            
-            }
+              <img
+                onClick={() => ChangeState(each.id)}
+                src="trash.png"
+                alt="trash"
+                style={{ height: "20px", width: "20px", gridColumn: "-1/-2" }}
+              />
+            </div>
+          )}
         </div>
       </>
     );
@@ -96,7 +106,29 @@ console.log(showfiltred)
   return (
     <div className="basketgrid">
       {table}
-      {price != 0 && <p >total price:{Math.floor((price*1))}$</p>}
+      {price != 0 && <p>total price:{Math.floor(price * 1)}$</p>}
+
+      <button
+        className="basketbutton"
+        onClick={() => {
+          if (localStorage.getItem("Log") === "true") {
+            return;
+          } else {
+            return toast.info(
+              () => {
+                return (
+                  <h1 style={{ fontSize: "1.3vw" }}>
+                    You Must Be logged in to Buy products
+                  </h1>
+                );
+              },
+              { autoClose: 5000, position: "top-center",toastId:"2" }
+            );
+          }
+        }}
+      >
+      Click to buy products
+      </button>
     </div>
   );
 }

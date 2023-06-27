@@ -5,10 +5,11 @@ import {
   Link,
   Form,
   useActionData,
-  redirect,
 } from "react-router-dom";
 import utility from "../utility";
 import { countthestars } from "../countstars";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
 
 export async function loader({ params }) {
   return utility(params.id);
@@ -16,21 +17,54 @@ export async function loader({ params }) {
 
 export async function action({ request }) {
   const formData = await request.formData();
-  const numberofproduct = formData.get("product");
+  const numberofproduct =
+    formData.get("product") !== "" ? formData.get("product") : 1;
   const pathname = new URL(request.url).searchParams.get("id");
   const value = localStorage.getItem(pathname);
   const totalvalue = value * 1 + numberofproduct * 1;
   value
     ? localStorage.setItem(pathname, totalvalue)
     : localStorage.setItem(pathname, numberofproduct);
-  return "123";
+  localStorage.setItem("new", true);
+  return [numberofproduct, pathname];
 }
 
 export default function SingleProduct() {
   let action = useActionData();
+
   let state = " ";
 
   const product = useLoaderData();
+
+
+
+
+  if (localStorage.getItem("new")) {
+    toast.success(
+      () => {
+        const productsorproduct = action[0] > 1 ? "products" : "product";
+      
+        return ( 
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+            {action && (
+              <img
+                src={`${product.image}`}
+                style={{ height: "50px", width: "50px", margin: "auto" }}
+              />
+            )}
+            <p>{`You added ${action[0]} ${productsorproduct} to cart  `}</p>
+          </div>
+          
+        );
+        
+      },
+      {  autoClose: 1500,position: "top-left",closeOnClick: false, }
+
+      
+    );
+     localStorage.removeItem("new");
+  }
+
   const SRC = countthestars(product.rating.rate);
   const location = useLocation();
 
@@ -85,11 +119,6 @@ export default function SingleProduct() {
           Add to basket
         </button>
       </Form>
-      {action && (
-        <p style={{ gridColumn: "2/3", margin: "auto" }}>
-          {"product added to your basket"}
-        </p>
-      )}
     </div>
   );
 }

@@ -10,6 +10,8 @@ import {
   useActionData,
   redirect,
 } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
 
 export async function action({ request }) {
   const Formdata = await request.formData();
@@ -26,15 +28,19 @@ export async function action({ request }) {
   }
 
   const producttocart = Formdata.get("currentvalue");
-  const numberofproducttocart = Formdata.get(`${producttocart}`);
+
+  let numberofproducttocart =
+    Formdata.get(`${producttocart}`) !== ""
+      ? Formdata.get(`${producttocart}`)
+      : 1;
   const valuebefore = localStorage.getItem(producttocart);
   const valueafter = valuebefore
     ? numberofproducttocart * 1 + valuebefore * 1
     : numberofproducttocart;
 
   localStorage.setItem(producttocart, valueafter);
-
-  return [producttocart, numberofproducttocart, valuebefore];
+  localStorage.setItem("new", true);
+  return [producttocart, numberofproducttocart];
 }
 
 export function loader({ request }) {
@@ -47,8 +53,8 @@ export function loader({ request }) {
 }
 
 export default function Products() {
-  console.log(useActionData());
-
+  const actiondata = useActionData();
+console.log(actiondata)
   const [params, setparams] = useSearchParams();
 
   const category = params.get("category") ? params.get("category") : " ";
@@ -57,6 +63,38 @@ export default function Products() {
     : " ";
 
   const data = useLoaderData();
+console.log(data)
+
+
+React.useEffect(() => {
+  if (localStorage.getItem("new")) {
+    localStorage.removeItem("new");
+    toast.success(
+      () => {
+        const productsorproduct = actiondata[1] > 1 ? "products" : "product";
+        return (
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+            {actiondata && (
+              <img
+                src={`${data[actiondata[0] - 1].image}`}
+                style={{ height: "50px", width: "50px", margin: "auto" }}
+              />
+            )}
+            <p>{`You added ${actiondata[1]} ${productsorproduct} to cart  `}</p>
+          </div>
+        );
+      },
+      { autoClose: 1500,position: "top-left", }
+    );
+
+  }
+}, localStorage.getItem("new"))
+
+
+
+
+  
+
   const style1 = { color: "red" };
   const style2 = { color: "black" };
 
@@ -92,20 +130,23 @@ export default function Products() {
           <img src={each.image} />
         </Link>
 
-        <div className="ratinggrid">
+        <div className="ratinggrid" key={data.indexOf(each)}>
           <div>{each.tittle}</div>
           <div className="rate">{each.rating.rate}</div>
           <img src={SRC} />
           <div className="count">{each.rating.count} users voted</div>
           <div className="price">
             <strong>{each.price}$</strong>
-
-            <Form method="post" className="allproductstocartform" style={{display:"grid",gridTemplateColumns:"1fr 1fr"}}>
+            <Form
+              method="post"
+              className="allproductstocarform"
+              style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}
+            >
               <input
                 style={{
                   margin: "auto",
                   textAlign: "center",
-                                }}
+                }}
                 name={each.id}
                 type="number"
                 min="1"
@@ -115,7 +156,7 @@ export default function Products() {
                 type="submit"
                 name="currentvalue"
                 value={each.id}
-                style={{  margin: "auto"}}
+                style={{ margin: "auto" }}
               >
                 {" "}
                 +

@@ -1,13 +1,9 @@
 import React from "react";
 import { useActionData, Form, Link, re, redirect } from "react-router-dom";
-import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  dynamicLinkDomain,
-} from "firebase/auth";
-import { auth, actionCodeSettings, database } from "../firebase.js";
-import { addDoc, collection } from "firebase/firestore";
-
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, database } from "../firebase.js";
+import { collection, setDoc, doc } from "firebase/firestore";
+import { ToastContainer, toast } from "react-toastify";
 export async function action({ request }) {
   const users = collection(database, "users");
   const formData = await request.formData();
@@ -18,23 +14,25 @@ export async function action({ request }) {
     return null;
   }
   if (password !== secondpassword) {
+    localStorage.setItem("error",true)
     return { error: "Passwords differ" };
   }
-
   try {
     const registration = await createUserWithEmailAndPassword(
       auth,
       email,
       password
     );
-    await addDoc(users, {
-      email: email,
-      name: false,
-      surname: false,
-      adress: false,
+localStorage.setItem("created",true)
+    await setDoc(doc(database, "users", auth.currentUser.uid), {
+      name: "Add your name",
+      surname: "Add surname",
+      number: "Add phone number",
     });
+
     return redirect("/login");
   } catch (error) {
+    localStorage.setItem("error", true);
     const message = error.message
       .replace("Firebase: Error (auth/", " ")
       .replace("-", " ")
@@ -44,7 +42,13 @@ export async function action({ request }) {
 }
 
 export default function Register() {
+
   const data = useActionData();
+
+  if (localStorage.getItem("error")) {
+    toast.error(`${data.error}`, { autoClose: 4000, position: "top-left" });
+    localStorage.removeItem("error");
+  }
 
   return (
     <div className="loginform">
@@ -72,7 +76,7 @@ export default function Register() {
       {data?.email && (
         <p style={{ color: "black" }} className="p">{`new account  created`}</p>
       )}
-      {data?.error && <p className="p">{data.error}</p>}
+
       <Link to="/login" className="link">
         {" "}
         Already have an account? Sign in

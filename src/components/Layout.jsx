@@ -3,16 +3,30 @@ import utility from "../utility";
 import {
   Outlet,
   NavLink,
-  useLoaderData,
-  redirect,
-  useLocation,
-  useParams,
-  useNavigate,
-} from "react-router-dom";
 
+  useLocation,
+
+} 
+
+
+from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 export async function loader() {}
 
 export default function Layout() {
+
+
+  if(localStorage.getItem("created")){
+    toast.success(    () => {
+      return (
+        <h1 style={{ fontSize: "1.3vw" }}>
+         Account created
+        </h1>
+      );
+    },
+    { autoClose: 5000, position: "top-center" })
+    localStorage.removeItem("created")
+  }
   const [data, setdata] = React.useState("No data");
 
   const location = useLocation();
@@ -56,17 +70,12 @@ export default function Layout() {
 
   const logged = localStorage.getItem("Log");
 
-  const style =
-    logged == "true"
-      ? { display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr" }
-      : { display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr " };
 
-  console.log(style);
 
   const [shown, isshown] = React.useState("false");
   return (
     <>
-      <nav className="NavBarGrid" style={style}>
+      <nav className="NavBarGrid" >
         <NavLink
           className="basket"
           to="basket"
@@ -107,6 +116,7 @@ export default function Layout() {
               return " 123";
             }}
             className="nav"
+            style={{color:"black"}}
           >
             Log Out
           </NavLink>
@@ -125,7 +135,7 @@ export default function Layout() {
             Log In
           </NavLink>
         )}{" "}
-        <NavLink
+         {logged !== "true"&&<NavLink
           to="register"
           className="nav"
           replace
@@ -136,7 +146,7 @@ export default function Layout() {
           }}
         >
           Register
-        </NavLink>
+        </NavLink>}
         <NavLink
           className="nav"
           style={({ isActive }) => {
@@ -173,6 +183,7 @@ export default function Layout() {
           </NavLink>
         )}
       </nav>
+      <ToastContainer ></ToastContainer>
       <Outlet />
     </>
   );
