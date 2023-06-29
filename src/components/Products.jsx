@@ -12,6 +12,8 @@ import {
 } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
+import { getDoc, doc } from "firebase/firestore";
+import { database, auth } from "../firebase";
 
 export async function action({ request }) {
   const Formdata = await request.formData();
@@ -43,9 +45,36 @@ export async function action({ request }) {
   return [producttocart, numberofproducttocart];
 }
 
-export function loader({ request }) {
+export async function loader({ request }) {
   const pathname = new URL(request.url);
   const id = pathname.searchParams.get("id");
+  if (localStorage.getItem("ShowHello")) {
+    localStorage.removeItem("ShowHello");
+    console.log(auth?.currentUser?.uid, 111);
+    const docRef = doc(database, "users", auth?.currentUser?.uid);
+
+    getDoc(docRef).then((data) => {
+      console.log(data.data().name);
+      toast(
+        () => {
+          return (
+      <>
+              <h1
+                style={{ fontSize: "24px", margin: "0", marginBottom: "10px" }}
+              >
+                Hello {data.data().name}!
+              </h1>
+              <p style={{ fontSize: "16px", margin: "0" }}>
+                Welcome to our website. We're glad to have you here.
+              </p>
+              </>
+          );
+        },
+        { position: "top-center" }
+      );
+    });
+  }
+
   if (id !== null) {
     return redirect(`${id}?id=${id}`);
   }
@@ -54,7 +83,7 @@ export function loader({ request }) {
 
 export default function Products() {
   const actiondata = useActionData();
-console.log(actiondata)
+  console.log(actiondata);
   const [params, setparams] = useSearchParams();
 
   const category = params.get("category") ? params.get("category") : " ";
@@ -63,37 +92,30 @@ console.log(actiondata)
     : " ";
 
   const data = useLoaderData();
-console.log(data)
+  console.log(data);
 
-
-React.useEffect(() => {
-  if (localStorage.getItem("new")) {
-    localStorage.removeItem("new");
-    toast.success(
-      () => {
-        const productsorproduct = actiondata[1] > 1 ? "products" : "product";
-        return (
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-            {actiondata && (
-              <img
-                src={`${data[actiondata[0] - 1].image}`}
-                style={{ height: "50px", width: "50px", margin: "auto" }}
-              />
-            )}
-            <p>{`You added ${actiondata[1]} ${productsorproduct} to cart  `}</p>
-          </div>
-        );
-      },
-      { autoClose: 1500,position: "top-left", }
-    );
-
-  }
-}, localStorage.getItem("new"))
-
-
-
-
-  
+  React.useEffect(() => {
+    if (localStorage.getItem("new")) {
+      localStorage.removeItem("new");
+      toast.success(
+        () => {
+          const productsorproduct = actiondata[1] > 1 ? "products" : "product";
+          return (
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+              {actiondata && (
+                <img
+                  src={`${data[actiondata[0] - 1].image}`}
+                  style={{ height: "50px", width: "50px", margin: "auto" }}
+                />
+              )}
+              <p>{`You added ${actiondata[1]} ${productsorproduct} to cart  `}</p>
+            </div>
+          );
+        },
+        { autoClose: 1500, position: "top-left" }
+      );
+    }
+  }, localStorage.getItem("new"));
 
   const style1 = { color: "red" };
   const style2 = { color: "black" };

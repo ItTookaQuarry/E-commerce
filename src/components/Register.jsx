@@ -10,7 +10,8 @@ export async function action({ request }) {
   const email = formData.get("email");
   const password = formData.get("password");
   const secondpassword = formData.get("secondpassword");
-  if (email === 0 || password === 0) {
+  const name=formData.get("name")
+  if (email === 0 || password === 0 || name===0) {
     return null;
   }
   if (password !== secondpassword) {
@@ -25,7 +26,7 @@ export async function action({ request }) {
     );
 localStorage.setItem("created",true)
     await setDoc(doc(database, "users", auth.currentUser.uid), {
-      name: "Add your name",
+      name: name,
       surname: "Add surname",
       number: "Add phone number",
     });
@@ -53,9 +54,19 @@ export default function Register() {
   return (
     <div className="loginform">
       <Form className="loginchild" method="post">
+
+
+      <p>Type your name</p>
+        <input name="name" type="text" placeholder="your name" className="imput" />
+        <br />
+
+        
         <p>Type your email</p>
         <input name="email" type="text" placeholder="email" className="imput" />
         <br />
+
+
+
         <p>Type your password</p>
         <input
           name="password"

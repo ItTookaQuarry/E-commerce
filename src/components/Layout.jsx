@@ -8,9 +8,10 @@ import {
 
 } 
 
-
 from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import { auth } from "../firebase";
+
 export async function loader() {}
 
 export default function Layout() {
@@ -78,7 +79,7 @@ export default function Layout() {
       <nav className="NavBarGrid" >
         <NavLink
           className="basket"
-          to="basket"
+          to={map.length>=1 ? "basket": window.location.href}
           style={({ isActive }) => {
             let style = "";
             isActive ? (style = style1) : (style = style2);
@@ -109,11 +110,27 @@ export default function Layout() {
             </div>
           )}
         </NavLink>
+
+
+
+
+
+
+
+
         {logged == "true" && (
           <NavLink
             onClick={() => {
+
+
+
+
+
+
               localStorage.setItem("Log", "false");
-              return " 123";
+              return toast.success(()=>{
+                return "Logged out"
+              },{autoClose:1500,position:"top-center"})
             }}
             className="nav"
             style={{color:"black"}}

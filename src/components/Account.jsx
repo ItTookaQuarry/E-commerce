@@ -35,26 +35,41 @@ export async function action({ request }) {
   const email = data.get("email");
 
   let err = "no error";
-  if (email !== 0) {
-    updateEmail(auth.currentUser, email)
-      .then(() => {})
-      .catch((error) => {
-        err = error.message   .replace("Firebase: Error (auth/", " ")
-        .replace("-", " ")
-        .replace(")", "");;
-      
-        toast.error(()=>{
-          return (
-            <h1>
-             {err}
-            </h1>
-          )
-        },{ autoClose: 1500,position: "top-left", })
 
+
+  if (email) {
+  
+
+    const timeout=setTimeout(()=>{
+      return toast.success( () => {
+        return <h1>Email changed</h1>;
+      },),{autoClose: 1500, position: "top-left"}
+    },2000)
+
+
+    updateEmail(auth.currentUser, email)
+      .then((success) => {})
+      .catch((error) => {
+        clearTimeout(timeout)
+        err = error.message
+          .replace("Firebase: Error (auth/", " ")
+          .replace("-", " ")
+          .replace(")", "");
+
+        toast.error(
+          () => {
+            return <h1>{err}</h1>;
+          },
+          { autoClose: 1500, position: "top-left" }
+        );
 
         return err;
-      });
+      })
+ .finally (  
+
+ )
   }
+
   const users = doc(database, "users", auth.currentUser.uid);
 
   await updateDoc(users, { surname: surname, name: name, adress: adress });
@@ -147,8 +162,7 @@ export default function Account() {
           style={adress ? { border: "1px solid black" } : { border: "none" }}
         />
         <button
-
-        style={{height:"100px",width:"100px"}}
+          style={{ height: "100px", width: "100px" }}
           type="submit"
           name="button"
           value={[displayedname, displayedsurname, displayedadress]}

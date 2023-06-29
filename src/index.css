@@ -204,13 +204,27 @@
   grid-column: 4/5;
 }
 
-
-.basketbutton{
+.basketform{
+  grid-column: 2/3;
+  grid-column: 2/3;
   box-shadow: 0px 4px 4px 4px #000;
   border-radius: 10px;
   grid-column: 2/3;
   height: 2em;
   width: 80%;
+  margin: auto;
+  background-color: white;
+  cursor: pointer;
+  font-size: larger;
+}
+
+.basketbutton{
+  grid-column: 2/3;
+  box-shadow: 0px 4px 4px 4px #000;
+  border-radius: 10px;
+  grid-column: 2/3;
+  height: 2em;
+  width: 100%;
   margin: auto;
   background-color: white;
   cursor: pointer;
