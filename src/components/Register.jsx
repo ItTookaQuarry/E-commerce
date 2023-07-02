@@ -30,7 +30,12 @@ localStorage.setItem("created",true)
       surname: "Add surname",
       number: "Add phone number",
     });
-
+    await setDoc(doc(database, "history", auth.currentUser.uid), {
+      number:0,
+      shopping:[],
+      numbers:[],
+      dates:[],
+    });
     return redirect("/login");
   } catch (error) {
     localStorage.setItem("error", true);

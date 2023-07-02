@@ -333,6 +333,79 @@ button:hover{
   font-weight: bolder;
 }
 
+.Shoppinghistorygrid{
+  display: grid;
+  grid-template-columns: 1fr ;
+  box-shadow: 0px 0.2vw 0.5vw 0.5vw#000;
+  border-radius: 10px;
+  width: 40%;
+  margin: auto;
+  row-gap: 1px;
+  margin-bottom: 4vw;
+}
+
+.outlet{
+  display: grid;
+  gap: 10px;
+}
+.Shoppinghistorygrid>h1{
+
+  grid-column: 1/6;
+  margin: auto;
+}
+
+.ProductsInShoppingHistory{
+  grid-column: 1/6;
+  display: grid;
+  margin: auto;
+  border-radius: 10px;
+}
+
+.AccountNav{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  font-size: 3vw; 
+  gap: 1vw;
+}
+
+.accountlink{
+  color: black;
+  text-decoration: none;
+  text-align: center;
+  box-shadow: 0px 4px 4px 4px #000;
+  border-radius: 10px;
+}
+.accountlink:hover{
+  text-align: center;
+  text-decoration: underline;
+}
+
+.acc{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.userprops{
+  grid-column: span 2;
+  margin-bottom: 1vw;
+  text-align: center;
+}
+.AccountChangeButton{
+  box-shadow: 0px 0.2vw 0.5vw 0.5vw#000;
+  border-radius: 10px;
+grid-column: 2/4
+;
+margin: auto;
+margin-top: 2vw;
+}
+
+
+.changeform{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+ margin: auto;
+}
+
 @media screen and (max-width: 800px) {
   .wrapper {
     grid-template-columns: 1fr 1fr 1fr;

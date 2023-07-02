@@ -15,7 +15,9 @@ import { auth } from "../firebase";
 export async function loader() {}
 
 export default function Layout() {
-
+if(!auth.currentUser){
+  localStorage.removeItem("Log")
+}
 
   if(localStorage.getItem("created")){
     toast.success(    () => {

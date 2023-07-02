@@ -32,17 +32,17 @@ export async function action({ request }) {
   const producttocart = Formdata.get("currentvalue");
 
   let numberofproducttocart =
-    Formdata.get(`${producttocart}`) !== ""
+    Formdata.get(`${producttocart}`)
       ? Formdata.get(`${producttocart}`)
-      : 1;
+      : "1";
   const valuebefore = localStorage.getItem(producttocart);
   const valueafter = valuebefore
     ? numberofproducttocart * 1 + valuebefore * 1
-    : numberofproducttocart;
+    : numberofproducttocart*1;
 
   localStorage.setItem(producttocart, valueafter);
   localStorage.setItem("new", true);
-  return [producttocart, numberofproducttocart];
+  return [producttocart, numberofproducttocart,];
 }
 
 export async function loader({ request }) {
@@ -50,11 +50,10 @@ export async function loader({ request }) {
   const id = pathname.searchParams.get("id");
   if (localStorage.getItem("ShowHello")) {
     localStorage.removeItem("ShowHello");
-    console.log(auth?.currentUser?.uid, 111);
     const docRef = doc(database, "users", auth?.currentUser?.uid);
 
     getDoc(docRef).then((data) => {
-      console.log(data.data().name);
+    
       toast(
         () => {
           return (
@@ -83,7 +82,7 @@ export async function loader({ request }) {
 
 export default function Products() {
   const actiondata = useActionData();
-  console.log(actiondata);
+  
   const [params, setparams] = useSearchParams();
 
   const category = params.get("category") ? params.get("category") : " ";
@@ -92,7 +91,7 @@ export default function Products() {
     : " ";
 
   const data = useLoaderData();
-  console.log(data);
+  
 
   React.useEffect(() => {
     if (localStorage.getItem("new")) {

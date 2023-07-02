@@ -8,6 +8,9 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import { auth, database } from "../firebase";
+import { doc, updateDoc, getDoc } from "firebase/firestore";
+
 export async function loader() {
   return utility();
 }
@@ -15,13 +18,13 @@ export async function loader() {
 export async function action({ request }) {
   const formData = await request.formData();
   const Submited = formData.get("submit");
-  console.log(Submited);
+  
   if (Submited === "true") {
     return redirect("/");
   }
 
   const basketlength = formData.get("basketlength");
-  console.log(basketlength);
+  
   for (let i = 0; i <= 20; i++) {
     if (formData.get(i) !== null) {
       const IndexOfProduct = i;
@@ -70,14 +73,21 @@ export default function Basket() {
 
   const [data, setData] = React.useState(loader);
   let price = 0;
-
+let p=0
   const showfiltred = data.filter((each) => {
-    return localStorage.getItem(each.id) !== null;
+    return localStorage.getItem(each.id) 
+  });
+
+  const tabtodatabase = showfiltred.map((each) => {
+    const number = localStorage.getItem(each.id);
+    p = p + number * each.price;
+    return { number: number, price: p, title: each.title, src: each.image };
   });
 
   const table = showfiltred.map((each, i) => {
     const number = localStorage.getItem(each.id);
-    price = price + number * each.price;
+    
+    price = price+(number * each.price);
 
     return (
       <>
@@ -139,12 +149,39 @@ export default function Basket() {
             name="submit"
             value={logged}
             className="basketbutton"
-            onClick={() => {
-              showfiltred.map((each) => {
-                localStorage.removeItem(each.id);
-              });
-
+            onClick={async () => {
               if (localStorage.getItem("Log") === "true") {
+                const history = doc(database, "history", auth.currentUser.uid);
+                const currentDate = new Date().toLocaleDateString();
+               
+               const document= await getDoc(history)
+                const data= document.data()
+                const numb=data.number
+                 const shopping=data.shopping
+                 const numbereachshopping=data.numbers
+                 const dates=data.dates
+                 if(dates!==[]){
+                await updateDoc(history, {
+                  number:(numb*1)+1,
+                  empty:false,
+                  shopping:[...shopping,...tabtodatabase],
+                  numbers:[...numbereachshopping,tabtodatabase.length],
+                  dates:[...dates,currentDate]
+                 
+                });}
+
+                else await updateDoc(history, {
+                  number:(numb*1)+1,
+                  empty:false,
+                  shopping:[...tabtodatabase],
+                  numbers:[tabtodatabase.length],
+                  dates:[currentDate]
+                 
+                })
+
+                showfiltred.map((each) => {
+                  localStorage.removeItem(each.id);
+                });
                 toast.info(
                   () => {
                     return (
@@ -170,7 +207,7 @@ export default function Basket() {
                       </div>
                     );
                   },
-                  { position: "top-center", autoClose: 1200 }
+                  { position: "top-center", autoClose: 8000 }
                 );
               } else {
                 return toast.info(

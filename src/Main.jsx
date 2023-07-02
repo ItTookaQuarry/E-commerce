@@ -13,8 +13,9 @@ import SingleProduct,{loader as SingleProductloader,action as SingleProductactio
 import Map from './components/Map';
 import Layout, {loader as Layoutloader} from './components/Layout';
 import Basket,{loader as Basketloader,action as Basketaction} from './components/Basket';
-import Account, {loader as Accountloader,action as Accountaction} from './components/Account';
-
+import Account from './components/Account';
+import YourAccount, {loader as Accountloader,action as Accountaction} from './components/YourAccount';
+import History,{loader as historyloader} from './components/History';
 const router= createBrowserRouter(createRoutesFromElements(
 
   <Route path="/" element={<Layout loader={Layoutloader}/>}   >
@@ -24,7 +25,10 @@ const router= createBrowserRouter(createRoutesFromElements(
 <Route  path="register" element={<Register/>} action={RegisterAction} />
 <Route  path="basket" element={<Basket/>} loader={Basketloader} action={Basketaction} />
 <Route  path="map" element={<Map/>} />
-<Route path="acc" element={<Account/>} loader={Accountloader} action={Accountaction}/>
+<Route path="acc" element={<Account/>} >
+<Route  index element={<YourAccount/>} loader={Accountloader} action={Accountaction}/>
+<Route  path="history" loader={historyloader} element={<History/>} />
+</Route>
     
         </Route>
 
