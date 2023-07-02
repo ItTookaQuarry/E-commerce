@@ -8,6 +8,7 @@
   font-weight: bolder;
 }
 
+
 .mapgrid {
   display: grid;
   grid-template-columns: 1fr;
@@ -408,7 +409,7 @@ margin-top: 2vw;
 
 @media screen and (max-width: 800px) {
   .wrapper {
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr ;
     font-size: 0.5em;
   }
   .basketonhover {
@@ -418,7 +419,9 @@ margin-top: 2vw;
     grid-template-columns: 1fr;
   }
   .ProductsFilterDiv {
-    font-size: 0.5em;
+    font-size: 0.6em;
+    font-weight: bolder;
+    
   }
 
   
