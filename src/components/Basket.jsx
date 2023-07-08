@@ -52,22 +52,7 @@ export async function action({ request }) {
 export default function Basket() {
   const navigate = useNavigate();
 
-  function ChangeState(id) {
-    localStorage.removeItem(id);
-    if (showfiltred.length === 1) {
-      toast.info(
-        () => {
-          return <h1 style={{ textAlign: "center" }}>Your Cart is empty</h1>;
-        },
-        { position: "top-center", autoClose: 2000 }
-      );
-      navigate("/");
-    }
-    setData((prev) => {
-      return [...prev, ..."I'm doing it only to refresh the page"];
-    });
-    return;
-  }
+
 
   const loader = useLoaderData();
 
@@ -91,7 +76,8 @@ let p=0
 
     return (
       <>
-        <div className="one">
+            
+         <div className="one">
           <h1>{each.title}</h1>
           <img src={each.image} style={{ height: "70%", width: "70%" }} />
           <div className="numb">
@@ -114,30 +100,42 @@ let p=0
                 type="submit"
                 style={{ border: "none", background: "transparent" }}
               >
-                <img
-                  src="trash.png"
-                  alt="trash"
-                  style={{ height: "20px", width: "20px" }}
-                />
+            <i class="material-icons" style={{cursor:"pointer"}}>remove_shopping_cart</i>
               </button>
             </Form>
           )}
           {number * 1 === 1 && (
-            <div className="deletebuttongrid">
-              <img
-                onClick={() => ChangeState(each.id)}
-                src="trash.png"
-                alt="trash"
-                style={{ height: "20px", width: "20px", gridColumn: "-1/-2" }}
+      
+      <Form className="deletebuttongrid" method="post">
+              <input
+              value={1}
+                name={each.id}
+                type="number"
+                placeholder="1"
+                min="1"
+                max={number}
+                style={{ height: "14px", width: "35px" }}
               />
-            </div>
+              <button
+                name="basketlength"
+                value={showfiltred.length}
+                type="submit"
+                style={{ border: "none", background: "transparent" }}
+              >
+            <i class="material-icons" style={{cursor:"pointer"}}>remove_shopping_cart</i>
+              </button>
+            </Form>
+
           )}
-        </div>
+        </div> 
       </>
     );
   });
 
   const logged = localStorage.getItem("Log") === "true" ? true : false;
+
+
+
 
   return (
     <div className="basketgrid">
@@ -189,7 +187,7 @@ let p=0
                         class="message-container"
                         style={{ fontWeight: "bolder" }}
                       >
-                        <h1>Important Information</h1>
+               
                         <p>Dear User,</p>
                         <p>
                           We regret to inform you that all the products you

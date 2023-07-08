@@ -60,7 +60,7 @@ export default function Login() {
           placeholder="password"
           className="imput"
         />
-        <button type="submit"> Submit</button>
+        <button type="submit" class="waves-effect waves-light btn"> Submit</button>
       </Form>
     </div>
   );

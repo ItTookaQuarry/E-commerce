@@ -1,11 +1,13 @@
 import React from 'react'
 import {
   Outlet,
-NavLink
+NavLink,
+useLocation
 } 
 
 from "react-router-dom";
 export default function Account() {
+  const location=useLocation
   return (
     <div className='Account'> 
     <br></br>

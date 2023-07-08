@@ -87,11 +87,8 @@ export default function Register() {
           className="imput"
         />
         <br></br>
-        <button type="submit">Create Account</button>
+        <button type="submit" class="waves-effect waves-light btn" style={{margin:"auto"}}>Create Account</button>
       </Form>
-      {data?.email && (
-        <p style={{ color: "black" }} className="p">{`new account  created`}</p>
-      )}
 
       <Link to="/login" className="link">
         {" "}

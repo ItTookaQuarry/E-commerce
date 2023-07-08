@@ -107,8 +107,8 @@ export default function YourAccount() {
 
   return (
     <>
-      <div className="acc" style={{ display: "grid", gridTemplateRows: "1fr" }}>
-
+     
+      <Form  method="post" className="acc">
         <div className="userprops"> 
           <div className="name">name:</div>
           <div className="name" style={{fontWeight:"bolder"}}> {displayedname}</div>
@@ -128,12 +128,11 @@ export default function YourAccount() {
           <div className="adress">adress</div>
           <div className="adress" style={{fontWeight:"bolder"}}> {displayedadress}</div>
         </div>
-      </div>
 
-      <Form className="changeform" method="post">
-        <h1 style={{textAlign:"center", gridColumn:"1/5"}}>Change your account</h1>
-        <div> <div>Change Your Name</div>
+      
+        <div className="form"> <div className="formschild"> Change Your Name</div>
         <input
+  
           onMouseEnter={() => {
             setname(true);
           }}
@@ -143,10 +142,10 @@ export default function YourAccount() {
           type="text"
           name="name"
           placeholder="change name"
-          style={name ? { border: "1px solid black" ,} : { border: "none" }}
+          style={name ? { border: "1px solid black" ,textAlign:"center" } : { border: "none",textAlign:"center"  }}
         />
         </div>
-        <div><div> Change Your surname</div>
+        <div className="form2"><div div className="formschild"> Change Your surname</div>
         <input
           onMouseEnter={() => {
             setsurname(true);
@@ -157,12 +156,12 @@ export default function YourAccount() {
           type="text"
           name="surname"
           placeholder="change surname"
-          style={surname ? { border: "1px solid black" } : { border: "none" }}
+          style={surname ? { border: "1px solid black",textAlign:"center"  } : { border: "none",textAlign:"center"  }}
         />
         </div>
 
 
-<div><div>Change Your email</div>
+<div className="form3"><div  className="formschild">Change Your email</div>
         <input
           onMouseEnter={() => {
             setemail(true);
@@ -173,11 +172,11 @@ export default function YourAccount() {
           type="text"
           name="email"
           placeholder="change email"
-          style={email ? { border: "1px solid black" } : { border: "none" }}
+          style={email ? { border: "1px solid black",textAlign:"center"  } : { border: "none",textAlign:"center"  }}
         />
 </div>
 
-<div><div>Change your adress</div>
+<div className="form4"><div  className="formschild">Change your adress</div>
         <input
           onMouseEnter={() => {
             setadress(true);
@@ -188,18 +187,21 @@ export default function YourAccount() {
           type="text"
           name="adress"
           placeholder="change adress"
-          style={adress ? { border: "1px solid black" } : { border: "none" }}
+          style={adress ? { border: "1px solid black",textAlign:"center"  } : { border: "none",textAlign:"center" }}
         />
         </div>
-
         <button
-          style={{ height:"3vw", width: "80%" }}
-          className="AccountChangeButton"
+        
+          style={{ height:"3em", width: "50%" ,margin:"auto",gridColumn:"1/3",backgroundColor:"black"}}
+          class="waves-effect waves-light btn"
           type="submit"
           name="button"
           value={[displayedname, displayedsurname, displayedadress]}
-        > Click to change Your Account</button>
+        > Change</button>
       </Form>
+
+      
+  
     </>
   );
 }

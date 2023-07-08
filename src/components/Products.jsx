@@ -1,5 +1,6 @@
 import React from "react";
 import utility from "../utility";
+import "materialize-css/dist/css/materialize.min.css";
 import { countthestars } from "../countstars";
 import {
   Form,
@@ -31,18 +32,17 @@ export async function action({ request }) {
 
   const producttocart = Formdata.get("currentvalue");
 
-  let numberofproducttocart =
-    Formdata.get(`${producttocart}`)
-      ? Formdata.get(`${producttocart}`)
-      : "1";
+  let numberofproducttocart = Formdata.get(`${producttocart}`)
+    ? Formdata.get(`${producttocart}`)
+    : "1";
   const valuebefore = localStorage.getItem(producttocart);
   const valueafter = valuebefore
     ? numberofproducttocart * 1 + valuebefore * 1
-    : numberofproducttocart*1;
+    : numberofproducttocart * 1;
 
   localStorage.setItem(producttocart, valueafter);
   localStorage.setItem("new", true);
-  return [producttocart, numberofproducttocart,];
+  return [producttocart, numberofproducttocart];
 }
 
 export async function loader({ request }) {
@@ -53,11 +53,10 @@ export async function loader({ request }) {
     const docRef = doc(database, "users", auth?.currentUser?.uid);
 
     getDoc(docRef).then((data) => {
-    
       toast(
         () => {
           return (
-      <>
+            <>
               <h1
                 style={{ fontSize: "24px", margin: "0", marginBottom: "10px" }}
               >
@@ -66,7 +65,7 @@ export async function loader({ request }) {
               <p style={{ fontSize: "16px", margin: "0" }}>
                 Welcome to our website. We're glad to have you here.
               </p>
-              </>
+            </>
           );
         },
         { position: "top-center" }
@@ -81,8 +80,10 @@ export async function loader({ request }) {
 }
 
 export default function Products() {
+
+
   const actiondata = useActionData();
-  
+
   const [params, setparams] = useSearchParams();
 
   const category = params.get("category") ? params.get("category") : " ";
@@ -91,30 +92,27 @@ export default function Products() {
     : " ";
 
   const data = useLoaderData();
-  
 
-  React.useEffect(() => {
-    if (localStorage.getItem("new")) {
-      localStorage.removeItem("new");
-      toast.success(
-        () => {
-          const productsorproduct = actiondata[1] > 1 ? "products" : "product";
-          return (
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-              {actiondata && (
-                <img
-                  src={`${data[actiondata[0] - 1].image}`}
-                  style={{ height: "50px", width: "50px", margin: "auto" }}
-                />
-              )}
-              <p>{`You added ${actiondata[1]} ${productsorproduct} to cart  `}</p>
-            </div>
-          );
-        },
-        { autoClose: 1500, position: "top-left" }
-      );
-    }
-  }, localStorage.getItem("new"));
+  if (localStorage.getItem("new")) {
+    localStorage.removeItem("new");
+    toast.success(
+      () => {
+        const productsorproduct = actiondata[1] > 1 ? "products" : "product";
+        return (
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+            {actiondata && (
+              <img
+                src={`${data[actiondata[0] - 1].image}`}
+                style={{ height: "50px", width: "50px", margin: "auto" }}
+              />
+            )}
+            <p>{`You added ${actiondata[1]} ${productsorproduct} to cart  `}</p>
+          </div>
+        );
+      },
+      { autoClose: 1500, position: "top-left" }
+    );
+  }
 
   const style1 = { color: "red" };
   const style2 = { color: "black" };
@@ -259,9 +257,16 @@ export default function Products() {
       <Form method="post" className="productsearchform">
         <p>Search for product</p>
         <input name="product" type="text" placeholder="" />
-        <button type="submit"> Submit</button>
+        <button type="submit" class="waves-effect waves-light btn" style={{position:"relative",zIndex:"1"}}>
+          {" "}
+          Submit
+        </button>
       </Form>
-      <div className="wrapper">{products}</div>
+
+      <div className="wrapper">
+     
+        {products}
+      </div>
     </>
   );
 }

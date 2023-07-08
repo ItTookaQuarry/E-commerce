@@ -3,6 +3,7 @@ import { auth, database } from "../firebase";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { useLoaderData, redirect } from "react-router-dom";
 import {toast } from "react-toastify"
+import M from "materialize-css";
 export async function loader() {
   const history = doc(database, "history", auth.currentUser.uid);
   const document = await getDoc(history);
@@ -31,31 +32,60 @@ export async function loader() {
 }
 
 export default function History() {
+  const dismissAll = () =>  toast.dismiss();
   const data = useLoaderData();
   console.log(data);
+
+
+function showcollection(index){
+  console.log(data[index].shopping)
+  const table=data[index].shopping
+  let price=0
+return toast.info(()=>{
+  const mapped= table.map(each=>{
+    price=price+each.price
+    return <div style={{display:"grid", gridTemplateColumns:"1fr 2fr 5fr",}}>
+      <div>{each.number}
+      x</div> 
+      <img src={each.src} style={{width:"50px",height:"50px"}}/>
+      <div>{each.title}</div>
+
+
+    </div>
+    
+
+
+
+  })
+  return (
+<div >
+{mapped}
+<div style={{textAlign:"center"}} >Price : {price}$</div>
+</div>
+
+  )
+},{position:"top-center",width:"300%",  autoClose: false})
+}
+
+
 
   const history = data.map((each,index) => {
     let price=0
     return (
-      <div className="Shoppinghistorygrid">
-        <h1>{`Your ${index + 1} Shopping at ${each.date}`}</h1> 
-        {each.shopping.map((product) => {
+      <div class="collection ">
+    <a 
+    onClick={()=>{
+      dismissAll()
+      showcollection(index)}}
+    
+    class="collection-item" style={{textAlign:"center"}}>{` ${index + 1}  at ${each.date}`}</a>
 
-          price=price+((product.number*1)*(product.price*1))
-          return (
-           <div className="ProductsInShoppingHistory">
-            <br></br>
-            <div style={{fontWeight:"bolder"}}>{`${product.number} `} {product.title }</div>
-              <img src={product.src} style={{height:"50px", width:"50px",margin:"auto"}}/>
-              <div style={{textAlign:"center"}}>{product.price}</div>
-              <br></br>
-            </div>
-          );
-        })}
-       <div style={{fontWeight:"bolder",margin:"auto",gridColumn:"1/6"}}>Price : {price}$</div>
+
       </div>
+      
     );
   });
 
   return <div>{history}</div>;
+  
 }
